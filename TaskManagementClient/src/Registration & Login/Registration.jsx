@@ -11,14 +11,34 @@ const Registration = () => {
     const navigate = useNavigate();
 
     const onSubmit = (data) => {
-        console.log(data);
+        // console.log(data);
         if (data) {
-            toast.success("Registration Successful.")
-            reset();
-            const redirectTimer = setTimeout(() => {
-                window.location.href = '/'; // Replace with your destination URL
-            }, 2000);
+
+            // send data to DB
+            fetch(`http://localhost:5000/users`, {
+                method: 'POST',
+                headers: {
+                    'content-type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(res => res.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.insertedId) {
+                        toast.success("Registration Successful.")
+                        reset();
+                        const redirectTimer = setTimeout(() => {
+                            // window.location.href = '/'; 
+                            navigate('/');
+                        }, 2000);
+                    }
+                    else {
+                        toast.error("User already exists in Database!")
+                    }
+                })
         }
+
     };
 
     return (

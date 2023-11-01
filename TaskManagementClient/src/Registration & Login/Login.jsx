@@ -2,20 +2,43 @@ import React from 'react';
 import { Controller, useForm, } from 'react-hook-form';
 import './style.css'
 import toast, { Toaster } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
 
 
 const Login = () => {
 
     const { handleSubmit, control, formState: { errors }, reset } = useForm();
+    const navigate = useNavigate();
 
-    const onSubmit = (data) => {
-        console.log(data);
-        if (data) {
-            toast.success("Login Successful.")
-            reset();
-            const redirectTimer = setTimeout(() => {
-                window.location.href = '/'; // Replace with your destination URL
-              }, 2000);
+    const onSubmit = (userData) => {
+        console.log(userData);
+        if (userData) {
+
+            // // send data to DB
+            // fetch(`http://localhost:5000/loggedUser`, 
+            // {
+            //     method: 'POST',
+            //     headers: {
+            //         'content-type': 'application/json'
+            //     },
+            //     body: JSON.stringify(userData)
+            // }
+            // )
+            //     .then(res => res.json())
+            //     .then(data => {
+            //         console.log(data);
+            //         if (data.insertedId) {
+            //             toast.success("Login Successful.")
+            //             reset();
+            //             const redirectTimer = setTimeout(() => {
+            //                 // window.location.href = '/'; 
+            //                 navigate('/');
+            //             }, 2000);
+            //         }
+            //         else {
+            //             toast.error("No User exists in Database!")
+            //         }
+            //     })
         }
     };
 
