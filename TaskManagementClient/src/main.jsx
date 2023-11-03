@@ -2,8 +2,8 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import './index.css'
-import Registration from './Registration & Login/Registration.jsx';
-import Login from './Registration & Login/Login.jsx';
+import Registration from './Registration_Login/Registration.jsx';
+import Login from './Registration_Login/Login.jsx';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './Home/Home.jsx';
 import AddTask from './AddTask/AddTask.jsx';
@@ -23,12 +23,12 @@ const router = createBrowserRouter([
         element: <AddTask/>
       },
       {
-        path:'/registration',
-        element: <Registration></Registration>
-      },
-      {
         path: '/login',
         element: <Login/>
+      },
+      {
+        path: '/register',
+        element: <Registration/>
       }
     ]
   },

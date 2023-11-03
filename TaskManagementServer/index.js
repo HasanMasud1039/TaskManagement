@@ -3,12 +3,16 @@ const app = express();
 const cors = require('cors');
 const jwt = require("jsonwebtoken");
 require('dotenv').config();
+const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser');
 
 const port = process.env.PORT || 5000;
 
 //middleware
 app.use(express.json());
 app.use(cors());
+app.use(bodyParser.json());
+
 
 //mongodb connection
 const { MongoClient, ServerApiVersion } = require("mongodb");
@@ -27,25 +31,25 @@ const client = new MongoClient(uri, {
 const verifyJWT = (req, res, next) => {
     const authentication = req.headers.authentication;
     if (!authentication) {
-      return res
-        .status(401)
-        .send({ error: true, message: "unauthorized access" });
+        return res
+            .status(401)
+            .send({ error: true, message: "unauthorized access" });
     }
-  
+
     const token = authentication.split(" ")[1];
-  
+
     // verify a token symmetric
     jwt.verify(token, process.env.ACCESS_TOKEN_JWT, (err, decoded) => {
-      if (err) {
-        return res
-          .status(401)
-          .send({ error: true, message: "unauthorized access" });
-      }
-  
-      req.decoded = decoded;
-      next();
+        if (err) {
+            return res
+                .status(401)
+                .send({ error: true, message: "unauthorized access" });
+        }
+
+        req.decoded = decoded;
+        next();
     });
-  };
+};
 
 async function run() {
     try {
@@ -67,10 +71,14 @@ async function run() {
         app.post("/jwt", (req, res) => {
             const user = req.body;
             const token = jwt.sign(user, process.env.ACCESS_TOKEN_JWT, {
-              expiresIn: "1h",
+                expiresIn: "1h",
             });
             res.send({ token });
-          });
+            console.log(token)
+        });
+
+
+
 
         //handle user
         //send user data to DB
@@ -79,6 +87,10 @@ async function run() {
 
             const query = { email: user.email };
 
+            const { email, password, name, photoURL } = user;
+            const hashedPassword = await bcrypt.hash(password, 10);
+            const registeredUser = { name, email, hashedPassword, photoURL };
+
             const existingUser = await usersCollection.findOne(query);
             if (existingUser) {
                 return res.send({
@@ -86,55 +98,61 @@ async function run() {
                 });
             }
 
-            const result = await usersCollection.insertOne(user);
+            const result = await usersCollection.insertOne(registeredUser);
             res.send(result);
         });
 
         //show user data
-        app.get('/users', async (req, res) => {
+        app.get('/users',verifyJWT, async (req, res) => {
             const cursor = usersCollection.find();
             const result = await cursor.toArray();
             res.send(result);
         })
-        //handle loggedUser
-        //send loggedUser data to DB
-        app.get("/loggedUser", async (req, res) => {
-            const loggedUser = req.body;
 
-            const query = { email: loggedUser.email, password: loggedUser.password };
 
-            const isUser = await usersCollection.findOne(query);
-            if (isUser) {
-                console.log("user is ok.", isUser);
-                return res.send({ isUser,
-                    message: ` ${isUser.name} exists in the Task Management database`,
-                });
-            }
-            else{
-                console.log("user is not ok.", loggedUser);
-                return res.send({
-                    message: ` ${isUser.name} does not exist in the Task Management database`,
-                });
+        // Login
+        app.post('/login', async (req, res) => {
+            const { email, password } = req.body;
+
+            const user = await usersCollection.findOne({ email });
+            console.log(user);
+            if (!user) {
+                return res.status(400).json('User not found');
             }
 
-            
+            const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
+            console.log(passwordMatch)
+
+            if (!passwordMatch) {
+                return res.status(400).json('Invalid password');
+            }
+
+            const token = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_JWT, { expiresIn: '1h' });
+            res.json({ token });
         });
-        //show loggedUser data
-        // app.get('/loggedUser', async (req, res) => {
-        //     const loggedUser = req.body;
-        //     const cursor = loggedUserCollection.find();
-        //     const result = await cursor.toArray();
-        //     res.send(result);
-        // })
-                //delete loggedUser data
-                app.delete('/loggedUser/:email', async (req, res) => {
-                    const loggedUser = req.params.email;
-                    
-                    const query = { email: loggedUser };
-                    const result = await loggedUserCollection.deleteOne(query);
-                    res.send(result);
-                    console.log("deleted result ", result);
-                })
+
+        //send task data to DB
+        app.post("/tasks", async (req, res) => {
+            const task = req.body;
+            const result = await tasksCollection.insertOne(task);
+            res.send(result);
+        });
+
+        //Show task data
+        app.get('/tasks',verifyJWT, async (req, res) => {
+            const user = req.body;
+            const result = await  tasksCollection.find().toArray();
+            res.send(result);
+        })
+        //Show task data :: email
+        app.get('/tasks/:email',verifyJWT, async (req, res) => {
+            const email = req.params.email;
+
+            const query = { userEmail: email };
+            const result = await tasksCollection.find(query).toArray();
+      
+            res.send(result);
+        })
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
