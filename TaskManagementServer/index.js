@@ -145,7 +145,7 @@ async function run() {
             res.send(result);
         })
         //Show task data :: email
-        app.get('/tasks/:email',verifyJWT, async (req, res) => {
+        app.get('/tasks/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
 
             const query = { userEmail: email };

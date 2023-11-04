@@ -32,14 +32,14 @@ const useAxiosSecure = () => {
           (error.response.status === 401 || error.response.status === 403)
         ) {
           await logOut();
-          navigate("/login");
+          navigate("/");
         }
         return Promise.reject(error);
       }
     );
-  }, [logOut, navigate]);
+}, [logOut, navigate, axiosSecure]);
 
-  return [axiosSecure];
+return [axiosSecure];
 };
 
 export default useAxiosSecure;

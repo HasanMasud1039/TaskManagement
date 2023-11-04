@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/useAuth';
 
 const Navbar = ({ userData }) => {
     const [isLoggedInUser, setIsLoggedInUser] = useState()
     const [dataFromChild, setDataFromChild] = useState([]);
-    console.log(userData)
+    const navigate = useNavigate();
 
     // Callback function to receive data from the child
     const receiveDataFromChild = (data) => {
@@ -26,6 +26,7 @@ const Navbar = ({ userData }) => {
         localStorage.removeItem('access-token');
         localStorage.removeItem('userEmail');
         setIsLoggedInUser(false);
+        navigate('/');
     }
     return (
         <div className=' bg-base-100  fixed w-full'>
