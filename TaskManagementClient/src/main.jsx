@@ -7,6 +7,7 @@ import Login from './Registration_Login/Login.jsx';
 import { RouterProvider, createBrowserRouter } from 'react-router-dom';
 import Home from './Home/Home.jsx';
 import AddTask from './AddTask/AddTask.jsx';
+import ShowTask from './ShowTask/ShowTask.jsx';
 
 const router = createBrowserRouter([
   {
@@ -29,6 +30,10 @@ const router = createBrowserRouter([
       {
         path: '/register',
         element: <Registration/>
+      },
+      {
+        path: '/showTask',
+        element: <ShowTask/>
       }
     ]
   },

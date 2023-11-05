@@ -103,10 +103,19 @@ async function run() {
         });
 
         //show user data
-        app.get('/users',verifyJWT, async (req, res) => {
+        app.get('/users', verifyJWT, async (req, res) => {
             const cursor = usersCollection.find();
             const result = await cursor.toArray();
             res.send(result);
+        })
+        //show specific user data
+        app.get('/users/:email', verifyJWT, async (req, res) => {
+            const userEmail = req.params.email;
+            const query = { email: userEmail };
+            const result = await usersCollection.find(query).toArray();
+            const {_id, name, email, photoURL} = result[0];
+            const user = {name, email, photoURL, _id}
+            res.send(user);
         })
 
 
@@ -139,9 +148,9 @@ async function run() {
         });
 
         //Show task data
-        app.get('/tasks',verifyJWT, async (req, res) => {
+        app.get('/tasks', verifyJWT, async (req, res) => {
             const user = req.body;
-            const result = await  tasksCollection.find().toArray();
+            const result = await tasksCollection.find().toArray();
             res.send(result);
         })
         //Show task data :: email
@@ -150,7 +159,7 @@ async function run() {
 
             const query = { userEmail: email };
             const result = await tasksCollection.find(query).toArray();
-      
+
             res.send(result);
         })
 

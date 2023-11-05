@@ -1,26 +1,43 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/useAuth';
+import useAxiosSecure from '../Hooks/useAxiosSecure';
+import {FaUser, FaUsers} from 'react-icons/fa';
 
-const Navbar = ({ userData }) => {
+const Navbar = () => {
     const [isLoggedInUser, setIsLoggedInUser] = useState()
-    const [dataFromChild, setDataFromChild] = useState([]);
     const navigate = useNavigate();
+    const [user, setUser] = useState();
+    const [axiosSecure] = useAxiosSecure();
+    const userEmail = localStorage.getItem('userEmail');
 
-    // Callback function to receive data from the child
-    const receiveDataFromChild = (data) => {
-        setDataFromChild(data);
-    }
-    // <Login sendDataToParent={receiveDataFromChild} ></Login>
-    useAuth({ receiveDataFromChild })
-
-    console.log(dataFromChild);
+    // axiosSecure.get(`http://localhost:5000/users/${userEmail}`)
+    // .then((response) => {
+    //     setUser(response.data);
+    // })
+    // .catch((error) => {
+    //     console.error('Error retrieving data:', error);
+    // });
+    useEffect(() => {
+        if (userEmail) {
+            axiosSecure.get(`http://localhost:5000/users/${userEmail}`)
+                .then((response) => {
+                    setUser(response.data);
+                })
+                .catch((error) => {
+                    console.error('Error retrieving data:', error);
+                });
+        }
+        else {
+            navigate('/');
+        }
+    }, []);
+    // console.log(user)
 
     const getIsLoggedInUser = () => {
         const token = localStorage.getItem('access-token');
         return token ? true : false
     }
-
 
     const handleLogout = () => {
         localStorage.removeItem('access-token');
@@ -73,12 +90,13 @@ const Navbar = ({ userData }) => {
                 </div>
                 {
                     getIsLoggedInUser() ? (
-                        <div className="navbar-end">
-                            <a className="btn btn-primary">Buttonnnnnnnnnn</a>
+                        <div className="navbar-end md:pr-8">
+                            <h2 className='px-4 text-lg font-semibold'>{user?.name}</h2>
+                            <img className='w-16 h-16 rounded-full' src={user?.photoURL} alt="" />
                         </div>)
                         :
                         (<div className="navbar-end">
-                            <a className="btn btn-error">Button</a>
+                            <a className="rounded-full text-[24px] px-8 border-4 w-16 h-16 "><FaUser></FaUser></a>
                         </div>)
                 }
 

@@ -10,7 +10,7 @@ function App() {
   return (
     <div className="gap-8">
       {noNavbar || <Navbar></Navbar>}
-      <div className="pt-20 bg-zinc-200">
+      <div className="h-screen pt-24 bg-zinc-200">
       <Outlet></Outlet>
       </div>
     </div>

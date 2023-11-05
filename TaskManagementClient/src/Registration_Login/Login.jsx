@@ -13,9 +13,7 @@ const Login = () => {
     const navigate = useNavigate();
     const [user, setUser]= useState();
     const [currentUser, setCurrentUser] = useState([]);
-    // const useAuthRet = useAuth(user);
-    // console.log(useAuthRet);
-    
+
     
     const onSubmit = async (userData) => {
         console.log(userData);
@@ -34,7 +32,7 @@ const Login = () => {
      
                 
                 
-                navigate('/');
+                navigate('/showTask');
     
               } catch (error) {
                 console.error(error.response.data);
