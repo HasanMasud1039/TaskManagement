@@ -83,7 +83,7 @@ const Navbar = () => {
                     getIsLoggedInUser() ? (
                         <div className="navbar-end md:pr-8">
                             <h2 className='px-4 text-lg font-semibold'>{user?.name}</h2>
-                            <img className='w-16 h-16 rounded-full' src={user?.photoURL} alt="" />
+                            <img className='w-16 h-16 rounded-full' src={user?.photoURL} alt="USER" />
                         </div>)
                         :
                         (<div className="navbar-end">

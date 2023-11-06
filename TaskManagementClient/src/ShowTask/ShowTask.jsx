@@ -27,15 +27,36 @@ const ShowTask = () => {
         },
     });
 
-console.log(updatedTask);
+    const [allTask, setAllTask] = useState(taskData);
+    const [searchText, setSearchText] = useState("");
+    //search in table
+    const search = () => {
+        fetch(
+            `http://tlocalhost:5000/getSearchByTaskName/${searchText}`
+        )
+            .then((res) => res.json())
+            .then((data) => {
+                // console.log(data);
+                setAllTask(data);
+            });
+    };
+    const handleSearchChange = (e) => {
+        setSearchText(e.target.value);
+    };
 
-const openModal = () => {
-    setIsOpen(true);
-  };
+    const handleSearchSubmit = (e) => {
+        e.preventDefault();
+        search();
+    };
 
-  const closeModal = () => {
-    setIsOpen(false);
-  };
+
+    const openModal = () => {
+        setIsOpen(true);
+    };
+
+    const closeModal = () => {
+        setIsOpen(false);
+    };
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -73,25 +94,25 @@ const openModal = () => {
     const handleUpdate = (id) => {
         console.log(id)
         axiosSecure.patch("/tasks", { id, updatedTask })
-        .then((res) => {
-            refetch();
-            closeModal();
-            Swal.fire({
-                title: 'Update  Successful.',
-                showClass: {
-                    popup: 'animate__animated animate__fadeInDown'
-                },
-                hideClass: {
-                    popup: 'animate__animated animate__fadeOutUp'
-                }
+            .then((res) => {
+                refetch();
+                closeModal();
+                Swal.fire({
+                    title: 'Update  Successful.',
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+                reset();
+                navigate('/');
+            })
+            .catch((error) => {
+                console.error('Error updating data:', error);
+                toast.error('Updating Data Failed')
             });
-            reset();
-            navigate('/');
-        })
-        .catch((error) => {
-            console.error('Error updating data:', error);
-            toast.error('Updating Data Failed')
-        });
 
     }
 
@@ -146,86 +167,84 @@ const openModal = () => {
                         {
                             isOpen &&
                             <div className="modal ">
-                            <div className="modal-box">
+                                <div className="modal-box">
+                                    <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
 
-                                <p>ID: {row._id}</p>
-                                <form className='space-y-4' onSubmit={handleSubmit(onSubmit)}>
+                                        <div >
+                                            <div className='flex gap-8'>
+                                                <label className='w-32 text-start' htmlFor="task">Title</label>
 
-                                    <div >
-                                        <div className='flex gap-8'>
-                                            <label className='w-32 text-start' htmlFor="task">Title</label>
+                                                <Controller
+                                                    name="task"
+                                                    control={control}
+                                                    rules={{ required: 'Task Title is required' }}
+                                                    // placeholder={row.task}
+                                                    render={({ field }) => (
+                                                        <input {...field} placeholder={row.task} type="text" id="task" />
+                                                    )}
 
-                                            <Controller
-                                                name="task"
-                                                control={control}
-                                                rules={{ required: 'Task Title is required' }}
-                                                // placeholder={row.task}
-                                                render={({ field }) => (
-                                                    <input {...field} placeholder={row.task} type="text" id="task" />
-                                                )}
-
-                                            />
+                                                />
+                                            </div>
+                                            {errors.task && <p>{errors.task.message}</p>}
                                         </div>
-                                        {errors.task && <p>{errors.task.message}</p>}
-                                    </div>
 
-                                    <div >
-                                        <div className='flex gap-8'>
-                                            <label className='w-20 text-start' htmlFor="date">Date</label>
-                                            <Controller
-                                                name="date"
-                                                control={control}
-                                                // placeholder={row.date}
-                                                rules={{ required: 'Date is required' }}
-                                                render={({ field }) => (
-                                                    <input placeholder={row.date} {...field}  type="date" id="date" />
-                                                )}
+                                        <div >
+                                            <div className='flex gap-8'>
+                                                <label className='w-20 text-start' htmlFor="date">Date</label>
+                                                <Controller
+                                                    name="date"
+                                                    control={control}
+                                                    // placeholder={row.date}
+                                                    rules={{ required: 'Date is required' }}
+                                                    render={({ field }) => (
+                                                        <input placeholder={row.date} {...field} type="date" id="date" />
+                                                    )}
 
-                                            />
+                                                />
+                                            </div>
+                                            {errors.date && <p>{errors.date.message}</p>}
                                         </div>
-                                        {errors.date && <p>{errors.date.message}</p>}
-                                    </div>
-                                    <div >
-                                        <div className='flex gap-8'>
-                                            <label className='w-20 text-start' htmlFor="time">Time</label>
-                                            <Controller
-                                                name="time"
-                                                control={control}
-                                                rules={{ required: 'Time is required' }}
-                                                // placeholder={row.time}
-                                                render={({ field }) => (
-                                                    <input {...field} placeholder={row.time} type="time" id="time" />
-                                                )}
+                                        <div >
+                                            <div className='flex gap-8'>
+                                                <label className='w-20 text-start' htmlFor="time">Time</label>
+                                                <Controller
+                                                    name="time"
+                                                    control={control}
+                                                    rules={{ required: 'Time is required' }}
+                                                    // placeholder={row.time}
+                                                    render={({ field }) => (
+                                                        <input {...field} placeholder={row.time} type="time" id="time" />
+                                                    )}
 
-                                            />
+                                                />
+                                            </div>
+                                            {errors.time && <p>{errors.time.message}</p>}
                                         </div>
-                                        {errors.time && <p>{errors.time.message}</p>}
-                                    </div>
-                                    <div >
-                                        <div className='flex gap-8'>
-                                            <label className='w-32 h-24 text-start' htmlFor="description">Description (Optional)</label>
-                                            <Controller
-                                                name="description"
-                                                control={control}
-                                                // placeholder={row?.description}
-                                                render={({ field }) => (
-                                                    <input {...field} placeholder={row?.description} type="text" id="description" />
-                                                )}
-                                            />
+                                        <div >
+                                            <div className='flex gap-8'>
+                                                <label className='w-32 h-24 text-start' htmlFor="description">Description (Optional)</label>
+                                                <Controller
+                                                    name="description"
+                                                    control={control}
+                                                    // placeholder={row?.description}
+                                                    render={({ field }) => (
+                                                        <input {...field} placeholder={row?.description} type="text" id="description" />
+                                                    )}
+                                                />
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div className='text-center flex justify-center'>
-                                        <button type="submit" onClick={() => handleUpdate(row._id)}>Update Task</button>
-                                    </div>
-                                </form>
+                                        <div className='text-center flex justify-center'>
+                                            <button type="submit" onClick={() => handleUpdate(row._id)}>Update Task</button>
+                                        </div>
+                                    </form>
 
-                                <div className="modal-action">
-                                    <label onClick={closeModal} htmlFor={row._id} className="btn btn-error">Close!</label>
+                                    <div className="modal-action">
+                                        <label onClick={closeModal} htmlFor={row._id} className="btn btn-error">Close!</label>
+                                    </div>
+
                                 </div>
 
                             </div>
-
-                        </div>
                         }
                     </div>
                     <button className='btn btn-xl btn-error text-xl' onClick={() => handleDelete(row._id)}>
@@ -296,8 +315,22 @@ const openModal = () => {
 
     return (
         <div>
-            <div className=" w-[90%] mx-auto text-center">
-                <h1 className='py-6 text-3xl font-serif font-bold'>Task List</h1>
+            <div className=" w-[90%] mx-auto ">
+                <h1 className='py-4 text-3xl text-center font-serif font-bold'>Task List</h1>
+                <div className='bg-red-300 relative mb-24 '>
+                    <form onChange={handleSearchSubmit} className=" absolute top-0 right-0 bg-zinc-200 border-0">
+                        <input className="rounded-lg px-4 mx-4 h-12"
+                            name="search"
+                            label="Search"
+                            value={searchText}
+                            onChange={handleSearchChange}
+                            placeholder="Search"
+                        />
+                        <button className="btn btn-primary mt-1">
+                            Search
+                        </button>
+                    </form>
+                </div>
                 <DataTable columns={columns} data={taskData} customStyles={customStyles} theme="solarized" pagination />
             </div>
 

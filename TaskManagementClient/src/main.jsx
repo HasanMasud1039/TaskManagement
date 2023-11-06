@@ -9,7 +9,6 @@ import Home from './Home/Home.jsx';
 import AddTask from './AddTask/AddTask.jsx';
 import ShowTask from './ShowTask/ShowTask.jsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-import UpdateTask from './ShowTask/UpdateTask.jsx';
 const queryClient = new QueryClient()
 
 const router = createBrowserRouter([
@@ -37,10 +36,6 @@ const router = createBrowserRouter([
         {
           path: '/showTask',
           element: <ShowTask />,
-        },
-        {
-          path: '/updateTask',
-          element: <UpdateTask/>
         }
       ]
   },

@@ -93,14 +93,14 @@ const Registration = () => {
                 </div>
 
                 <div>
-                    <label htmlFor="photoURL">Photo URL</label>
+                    <label htmlFor="photoURL">Photo URL(Optional)</label>
                     <Controller
                         name="photoURL"
                         control={control}
-                        rules={{ required: 'Photo URL is required' }}
+                        // rules={{ required: 'Photo URL is required' }}
                         render={({ field }) => <input {...field} type="text" id="photoURL" />}
                     />
-                    {errors.photoURL && <p>{errors.photoURL.message}</p>}
+                    {errors?.photoURL && <p>{errors?.photoURL.message}</p>}
                 </div>
                 <h3 className='text-lg'>Already have an account? <span className='text-primary font-semibold'><Link to='/login'>Login</Link></span> </h3>
 

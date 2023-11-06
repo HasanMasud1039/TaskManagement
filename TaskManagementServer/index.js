@@ -113,8 +113,8 @@ async function run() {
             const userEmail = req.params.email;
             const query = { email: userEmail };
             const result = await usersCollection.find(query).toArray();
-            const {_id, name, email, photoURL} = result[0];
-            const user = {name, email, photoURL, _id}
+            const { _id, name, email, photoURL } = result[0];
+            const user = { name, email, photoURL, _id }
             res.send(user);
         })
 
@@ -171,35 +171,46 @@ async function run() {
             const result = await tasksCollection.deleteOne(query);
             res.send(result);
             console.log("deleted result ", result);
-          });
+        });
 
-              // handleUpdate
-              app.patch("/tasks", async (req, res) => {
-                const id = req.body.id; // Access id from req.body
-                const updatedTask = req.body.updatedTask; // Access data from req.body
-                console.log(updatedTask);
-          
-                const query = { _id: new ObjectId(id) };
-                const update = {
-                  $set: {
+        // handleUpdate
+        app.patch("/tasks", async (req, res) => {
+            const id = req.body.id; // Access id from req.body
+            const updatedTask = req.body.updatedTask; // Access data from req.body
+            console.log(updatedTask);
+
+            const query = { _id: new ObjectId(id) };
+            const update = {
+                $set: {
                     task: updatedTask?.task,
                     date: updatedTask?.date,
                     time: updatedTask?.time,
                     description: updatedTask?.description,
-                  }
-                };
-                const options = { upsert: true };
-                const result = await tasksCollection.updateOne(
-                  query,
+                }
+            };
+            const options = { upsert: true };
+            const result = await tasksCollection.updateOne(
+                query,
                 //   options,
-                  update
-                );
-          
-                // Retrieve the updated document after the update
-                const updatedDocument = await tasksCollection.findOne(query);
-          
-                res.send({ result, updatedDocument });
-              });
+                update
+            );
+
+            // Retrieve the updated document after the update
+            const updatedDocument = await tasksCollection.findOne(query);
+
+            res.send({ result, updatedDocument });
+        });
+
+        //search
+        app.get("/getSearchByTaskName/:text", async (req, res) => {
+            const searchText = req.params.text;
+            const result = await tasksCollection
+                .find({
+                    name: { $regex: searchText, $options: "i" },
+                })
+                .toArray();
+            res.send(result);
+        });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });
