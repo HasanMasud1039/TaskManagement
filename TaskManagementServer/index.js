@@ -15,7 +15,7 @@ app.use(bodyParser.json());
 
 
 //mongodb connection
-const { MongoClient, ServerApiVersion } = require("mongodb");
+const { MongoClient, ServerApiVersion, ObjectId } = require("mongodb");
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.fznkpfd.mongodb.net/?retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -162,6 +162,44 @@ async function run() {
 
             res.send(result);
         })
+
+        //delete task
+        app.delete("/tasks/:id", async (req, res) => {
+            const taskId = req.params.id;
+            const query = { _id: new ObjectId(taskId) };
+            console.log("deleted query id ", query.taskId);
+            const result = await tasksCollection.deleteOne(query);
+            res.send(result);
+            console.log("deleted result ", result);
+          });
+
+              // handleUpdate
+              app.patch("/tasks", async (req, res) => {
+                const id = req.body.id; // Access id from req.body
+                const updatedTask = req.body.updatedTask; // Access data from req.body
+                console.log(updatedTask);
+          
+                const query = { _id: new ObjectId(id) };
+                const update = {
+                  $set: {
+                    task: updatedTask?.task,
+                    date: updatedTask?.date,
+                    time: updatedTask?.time,
+                    description: updatedTask?.description,
+                  }
+                };
+                const options = { upsert: true };
+                const result = await tasksCollection.updateOne(
+                  query,
+                //   options,
+                  update
+                );
+          
+                // Retrieve the updated document after the update
+                const updatedDocument = await tasksCollection.findOne(query);
+          
+                res.send({ result, updatedDocument });
+              });
 
         // Send a ping to confirm a successful connection
         await client.db("admin").command({ ping: 1 });

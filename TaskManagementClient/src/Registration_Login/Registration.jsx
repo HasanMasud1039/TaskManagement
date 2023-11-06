@@ -11,10 +11,8 @@ const Registration = () => {
     const { handleSubmit, control, formState: { errors }, reset } = useForm();
     const navigate = useNavigate();
     const [user, setUser] = useState();
-    // useAuth(user);
 
     const onSubmit = (userData) => {
-        // console.log(data);
         if (userData) {
 
             // send data to DB

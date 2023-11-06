@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import useAuth from '../Hooks/useAuth';
 import useAxiosSecure from '../Hooks/useAxiosSecure';
-import {FaUser, FaUsers} from 'react-icons/fa';
+import { FaUser, FaUsers } from 'react-icons/fa';
 
 const Navbar = () => {
     const [isLoggedInUser, setIsLoggedInUser] = useState()
@@ -11,13 +11,6 @@ const Navbar = () => {
     const [axiosSecure] = useAxiosSecure();
     const userEmail = localStorage.getItem('userEmail');
 
-    // axiosSecure.get(`http://localhost:5000/users/${userEmail}`)
-    // .then((response) => {
-    //     setUser(response.data);
-    // })
-    // .catch((error) => {
-    //     console.error('Error retrieving data:', error);
-    // });
     useEffect(() => {
         if (userEmail) {
             axiosSecure.get(`http://localhost:5000/users/${userEmail}`)
@@ -32,7 +25,7 @@ const Navbar = () => {
             navigate('/');
         }
     }, []);
-    // console.log(user)
+
 
     const getIsLoggedInUser = () => {
         const token = localStorage.getItem('access-token');
@@ -46,8 +39,8 @@ const Navbar = () => {
         navigate('/');
     }
     return (
-        <div className=' bg-base-100  fixed w-full'>
-            <div className="navbar bg-red-100">
+        <div className=' bg-zinc-100  fixed w-full'>
+            <div className="navbar  w-[90%] mx-auto">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -84,8 +77,6 @@ const Navbar = () => {
                                 :
                                 (<li><Link to='/login'>Login</Link></li>)
                         }
-
-
                     </ul>
                 </div>
                 {
@@ -96,7 +87,7 @@ const Navbar = () => {
                         </div>)
                         :
                         (<div className="navbar-end">
-                            <a className="rounded-full text-[24px] px-8 border-4 w-16 h-16 "><FaUser></FaUser></a>
+                            <a className="rounded-full text-[44px] text-center border-0 w-16 h-16 "><Link to='/login'><FaUser></FaUser></Link></a>
                         </div>)
                 }
 

@@ -11,34 +11,33 @@ const Login = () => {
 
     const { handleSubmit, control, formState: { errors }, reset } = useForm();
     const navigate = useNavigate();
-    const [user, setUser]= useState();
+    const [user, setUser] = useState();
     const [currentUser, setCurrentUser] = useState([]);
 
-    
+
     const onSubmit = async (userData) => {
         console.log(userData);
         setUser(userData);
- 
-            try {
-                const response = await axios.post('http://localhost:5000/login', {email: userData.email, password: userData.password });
-                const token = await response.data.token;
-                localStorage.setItem('access-token', token);
-                localStorage.setItem('userEmail', userData.email);
-                    
-                    toast.success("Login Successful")
-                // })
-                setCurrentUser(userData.email);
-                console.log(userData);
-     
-                
-                
-                navigate('/showTask');
-    
-              } catch (error) {
-                console.error(error.response.data);
-                toast.error(error.response.data)
-    
-              }
+
+        try {
+            const response = await axios.post('http://localhost:5000/login', { email: userData.email, password: userData.password });
+            const token = await response.data.token;
+            localStorage.setItem('access-token', token);
+            localStorage.setItem('userEmail', userData.email);
+
+            toast.success("Login Successful")
+            setCurrentUser(userData.email);
+            console.log(userData);
+
+
+
+            navigate('/');
+
+        } catch (error) {
+            console.error(error.response.data);
+            toast.error(error.response.data)
+
+        }
     };
 
 
@@ -46,7 +45,7 @@ const Login = () => {
         <div className='h-screen'>
             <h1 className='text-3xl font-bold text-center py-8 uppercase'>login Now</h1>
             <form onSubmit={handleSubmit(onSubmit)}>
-    
+
                 <div>
                     <label htmlFor="email">Email</label>
                     <Controller
@@ -77,7 +76,7 @@ const Login = () => {
                     />
                     {errors.password && <p>{errors.password.message}</p>}
                 </div>
-                
+
                 <h3 className='text-lg'>New Here? <span className='text-primary font-semibold'><Link to='/register'>Register</Link></span> </h3>
 
                 <div className='text-center mt-4 flex justify-center'>

@@ -20,7 +20,7 @@ const AddTask = () => {
             reset();
             const redirectTimer = setTimeout(() => {
                 // window.location.href = '/';
-                navigate('/');
+                navigate('/showTask');
             }, 2000);
 
             //POST Data
