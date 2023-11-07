@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuth from '../Hooks/useAuth';
 import useAxiosSecure from '../Hooks/useAxiosSecure';
 import { FaUser, FaUsers } from 'react-icons/fa';
 
@@ -38,6 +37,7 @@ const Navbar = () => {
         setIsLoggedInUser(false);
         navigate('/');
     }
+
     return (
         <div className=' bg-zinc-100  fixed w-full'>
             <div className="navbar  w-[80%] mx-auto">
@@ -61,10 +61,9 @@ const Navbar = () => {
                             }
                         </ul>
                     </div>
-                    {/* <p className="btn btn-ghost font-bold text-xl uppercase font-serif">Task Management</p> */}
                     <img className='h-20 w-64' src="/taskM.png" alt="" />
                 </div>
-                 <div className="navbar-center hidden lg:flex">
+                <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 text-xl font-black ">
                         <li><Link to='/'>Home</Link></li>
 

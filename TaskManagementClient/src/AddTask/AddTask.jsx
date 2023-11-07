@@ -1,10 +1,8 @@
 import React from 'react';
 import { Controller, useForm, } from 'react-hook-form';
-import './AddTask.css'
 import toast, { Toaster } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-
 
 const AddTask = () => {
 
@@ -12,9 +10,8 @@ const AddTask = () => {
     const { handleSubmit, control, formState: { errors }, reset } = useForm();
     const navigate = useNavigate();
     const onSubmit = async (data) => {
-        console.log(data);
         const task = { userEmail, ...data }
-        console.log(task);
+
         if (data) {
             toast.success("Task Added Successfully.")
             reset();

@@ -11,7 +11,7 @@ function App() {
     <div className="gap-8">
       {noNavbar || <Navbar></Navbar>}
       <div className="h-screen pt-24 bg-zinc-200">
-      <Outlet></Outlet>
+        <Outlet></Outlet>
       </div>
     </div>
   )

@@ -17,7 +17,7 @@ const ShowTask = () => {
     const [updatedTask, setUpdatedTask] = useState();
     const [isOpen, setIsOpen] = useState(false);
 
-    const { data: taskData = [], refetch } = useQuery({
+    const { data: taskData = [], refetch } = useQuery({ //used for refetch after CRUD operation.
         queryKey: ["email", userEmail],
         queryFn: async () => {
             const res = await axiosSecure.get(
@@ -27,7 +27,7 @@ const ShowTask = () => {
         },
     });
 
-    const [allTask, setAllTask] = useState(taskData);
+    const [allTask, setAllTask] = useState('');
     const [searchText, setSearchText] = useState("");
     //search in table
     const search = () => {
@@ -49,7 +49,7 @@ const ShowTask = () => {
         search();
     };
 
-
+    //used for automatic modal close after successful update
     const openModal = () => {
         setIsOpen(true);
     };
@@ -57,6 +57,7 @@ const ShowTask = () => {
     const closeModal = () => {
         setIsOpen(false);
     };
+    //onClick Delete Button
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -83,14 +84,13 @@ const ShowTask = () => {
                             toast.success('Deleted');
                             navigate('/')
                         }
-
                     })
             }
         })
 
 
     }
-
+    //onClick Update button
     const handleUpdate = (id) => {
         console.log(id)
         console.log(updatedTask);
@@ -121,60 +121,47 @@ const ShowTask = () => {
 
     }
 
-    //form
-
+    //react-hook-form item
     const onSubmit = (data) => {
-        // console.log(data);
         setUpdatedTask(data);
     };
-
-
+    //react-table-component items
     const columns = [
         {
             name: 'Title',
             selector: row => row.task,
             sortable: true,
             width: '10%'
-
         },
         {
             name: 'Date',
             selector: row => row.date,
             sortable: true,
             width: '10%'
-
         },
         {
             name: 'Time',
             selector: row => row.time,
             sortable: true,
             width: '10%'
-
         },
         {
             name: 'Description',
             selector: row => row.description,
             sortable: false,
             width: '60%',
-
-
         },
         {
             cell: (row) => (
                 <div className='space-x-8 flex'>
                     <div>
                         <label htmlFor={row._id} onClick={openModal} className="btn btn-xl btn-warning text-xl" ><FaPenAlt /></label>
-
-
                         <input type="checkbox" id={row._id} className="modal-toggle" />
-
                         {
                             isOpen &&
                             <div className="modal">
                                 <div className="modal-box  bg-zinc-100">
-
                                     <form className='space-y-4 max-w-[600px] mx-auto p-8 border border-gray-300 rounded-lg shadow-md bg-gray-200' onSubmit={handleSubmit(onSubmit)}>
-
                                         <div className=' space-y-1'>
                                             <div className='gap-8  space-y-1'>
                                                 <label className='w-32 text-start font-bold mb-2' htmlFor="task">Title</label>
@@ -189,7 +176,6 @@ const ShowTask = () => {
                                             </div>
                                             {errors.task && <p className='text-red-500 mt-[-10px] mb-2'>{errors.task.message}</p>}
                                         </div>
-
                                         <div className=' space-y-1'>
                                             <div className='gap-8  space-y-1'>
                                                 <label className='w-20 text-start font-bold mb-2' htmlFor="date">Date</label>
@@ -204,7 +190,6 @@ const ShowTask = () => {
                                             </div>
                                             {errors.date && <p className='text-red-500 mt-[-10px] mb-2'>{errors.date.message}</p>}
                                         </div>
-
                                         <div className=' space-y-1'>
                                             <div className='gap-8  space-y-1'>
                                                 <label className='w-20 text-start font-bold mb-2' htmlFor="time">Time</label>
@@ -219,7 +204,6 @@ const ShowTask = () => {
                                             </div>
                                             {errors.time && <p className='text-red-500 mt-[-10px] mb-2'>{errors.time.message}</p>}
                                         </div>
-
                                         <div className=' space-y-1'>
                                             <div className='gap-8  space-y-2'>
                                                 <label className='w-32 h-24 text-start font-bold mb-2' htmlFor="description">Description (Optional)</label>
@@ -232,19 +216,14 @@ const ShowTask = () => {
                                                 />
                                             </div>
                                         </div>
-
                                         <div className='text-center flex justify-center'>
                                             <button type="submit" onClick={() => handleUpdate(row._id)} className='bg-blue-500 text-white p-2 px-4 rounded-md cursor-pointer'>Update Task</button>
                                         </div>
                                     </form>
-
-
                                     <div className="modal-action">
                                         <label onClick={closeModal} htmlFor={row._id} className="btn btn-error">Close!</label>
                                     </div>
-
                                 </div>
-
                             </div>
                         }
                     </div>
@@ -255,7 +234,6 @@ const ShowTask = () => {
             ),
             name: 'Action',
             width: '10%'
-
         },
     ];
     const customStyles = {
@@ -288,7 +266,6 @@ const ShowTask = () => {
         },
         columns: {
             style: {
-
             }
         }
     };
