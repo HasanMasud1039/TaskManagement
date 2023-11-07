@@ -35,9 +35,7 @@ const verifyJWT = (req, res, next) => {
             .status(401)
             .send({ error: true, message: "unauthorized access" });
     }
-
     const token = authentication.split(" ")[1];
-
     // verify a token symmetric
     jwt.verify(token, process.env.ACCESS_TOKEN_JWT, (err, decoded) => {
         if (err) {
@@ -45,7 +43,6 @@ const verifyJWT = (req, res, next) => {
                 .status(401)
                 .send({ error: true, message: "unauthorized access" });
         }
-
         req.decoded = decoded;
         next();
     });
@@ -63,9 +60,6 @@ async function run() {
         const tasksCollection = client
             .db("TaskManagementDB")
             .collection("Tasks");
-        // const loggedUserCollection = client
-        //     .db("TaskManagementDB")
-        //     .collection("LoggedUser");
 
         //JWT Authentication
         app.post("/jwt", (req, res) => {
@@ -77,27 +71,20 @@ async function run() {
             console.log(token)
         });
 
-
-
-
         //handle user
         //send user data to DB
         app.post("/users", async (req, res) => {
             const user = req.body;
-
             const query = { email: user.email };
-
             const { email, password, name, photoURL } = user;
             const hashedPassword = await bcrypt.hash(password, 10);
             const registeredUser = { name, email, hashedPassword, photoURL };
-
             const existingUser = await usersCollection.findOne(query);
             if (existingUser) {
                 return res.send({
                     message: ` ${user.name} already exists in the Task Management database`,
                 });
             }
-
             const result = await usersCollection.insertOne(registeredUser);
             res.send(result);
         });
@@ -108,6 +95,7 @@ async function run() {
             const result = await cursor.toArray();
             res.send(result);
         })
+
         //show specific user data
         app.get('/users/:email', verifyJWT, async (req, res) => {
             const userEmail = req.params.email;
@@ -118,24 +106,20 @@ async function run() {
             res.send(user);
         })
 
-
         // Login
         app.post('/login', async (req, res) => {
             const { email, password } = req.body;
-
             const user = await usersCollection.findOne({ email });
             console.log(user);
             if (!user) {
                 return res.status(400).json('User not found');
             }
-
             const passwordMatch = await bcrypt.compare(password, user.hashedPassword);
             console.log(passwordMatch)
 
             if (!passwordMatch) {
                 return res.status(400).json('Invalid password');
             }
-
             const token = jwt.sign({ userId: user._id }, process.env.ACCESS_TOKEN_JWT, { expiresIn: '1h' });
             res.json({ token });
         });
@@ -153,13 +137,12 @@ async function run() {
             const result = await tasksCollection.find().toArray();
             res.send(result);
         })
+
         //Show task data :: email
         app.get('/tasks/:email', verifyJWT, async (req, res) => {
             const email = req.params.email;
-
             const query = { userEmail: email };
             const result = await tasksCollection.find(query).toArray();
-
             res.send(result);
         })
 
@@ -178,7 +161,6 @@ async function run() {
             const id = req.body.id; // Access id from req.body
             const updatedTask = req.body.updatedTask; // Access data from req.body
             console.log(updatedTask);
-
             const query = { _id: new ObjectId(id) };
             const update = {
                 $set: {
@@ -194,10 +176,8 @@ async function run() {
                 //   options,
                 update
             );
-
             // Retrieve the updated document after the update
             const updatedDocument = await tasksCollection.findOne(query);
-
             res.send({ result, updatedDocument });
         });
 
