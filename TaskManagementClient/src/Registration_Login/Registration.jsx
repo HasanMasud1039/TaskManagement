@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import { Controller, useForm, } from 'react-hook-form';
-import './style.css'
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
-import useAuth from '../Hooks/useAuth';
 
 
 const Registration = () => {
@@ -46,23 +44,23 @@ const Registration = () => {
     return (
         <div className='h-screen'>
             <h1 className='text-3xl font-bold text-center py-8 uppercase'>register Now</h1>
-            <form className='mt-0' onSubmit={handleSubmit(onSubmit)}>
+
+            <form className='max-w-[600px] mx-auto p-20 border border-gray-300 rounded-lg shadow-md bg-gray-200' onSubmit={handleSubmit(onSubmit)}>
                 <div>
-                    <label htmlFor="name">Name</label>
+                    <label htmlFor="name" className="block font-bold mb-2">Name</label>
                     <Controller
                         name="name"
                         control={control}
                         rules={{ required: 'Name is required' }}
                         render={({ field }) => (
-                            <input {...field} type="text" id="name" />
+                            <input {...field} type="text" id="name" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />
                         )}
-
                     />
-                    {errors.name && <p>{errors.name.message}</p>}
+                    {errors.name && <p className="text-red-500 mt-[-10px] mb-2">{errors.name.message}</p>}
                 </div>
 
                 <div>
-                    <label htmlFor="email">Email</label>
+                    <label htmlFor="email" className="block font-bold mb-2">Email</label>
                     <Controller
                         name="email"
                         control={control}
@@ -73,13 +71,13 @@ const Registration = () => {
                                 message: 'Invalid email address',
                             },
                         }}
-                        render={({ field }) => <input {...field} type="email" id="email" />}
+                        render={({ field }) => <input {...field} type="email" id="email" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />}
                     />
-                    {errors.email && <p>{errors.email.message}</p>}
+                    {errors.email && <p className="text-red-500 mt-[-10px] mb-2">{errors.email.message}</p>}
                 </div>
 
                 <div>
-                    <label htmlFor="password">Password</label>
+                    <label htmlFor="password" className="block font-bold mb-2">Password</label>
                     <Controller
                         name="password"
                         control={control}
@@ -87,27 +85,28 @@ const Registration = () => {
                             required: 'Password is required',
                             minLength: { value: 6, message: 'Password must be at least 6 characters long' },
                         }}
-                        render={({ field }) => <input {...field} type="password" id="password" />}
+                        render={({ field }) => <input {...field} type="password" id="password" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />}
                     />
-                    {errors.password && <p>{errors.password.message}</p>}
+                    {errors.password && <p className="text-red-500 mt-[-10px] mb-2">{errors.password.message}</p>}
                 </div>
 
                 <div>
-                    <label htmlFor="photoURL">Photo URL(Optional)</label>
+                    <label htmlFor="photoURL" className="block font-bold mb-2">Photo URL (Optional)</label>
                     <Controller
                         name="photoURL"
                         control={control}
-                        // rules={{ required: 'Photo URL is required' }}
-                        render={({ field }) => <input {...field} type="text" id="photoURL" />}
+                        render={({ field }) => <input {...field} type="text" id="photoURL" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />}
                     />
-                    {errors?.photoURL && <p>{errors?.photoURL.message}</p>}
+                    {errors?.photoURL && <p className="text-red-500 mt-[-10px] mb-2">{errors?.photoURL.message}</p>}
                 </div>
-                <h3 className='text-lg'>Already have an account? <span className='text-primary font-semibold'><Link to='/login'>Login</Link></span> </h3>
 
-                <div className='text-center mt-4 flex justify-center'>
-                    <button type="submit">Register</button>
+                <h3 className="text-lg">Already have an account? <span className="text-primary font-semibold"><Link to="/login">Login</Link></span></h3>
+
+                <div className="text-center mt-4 flex justify-center">
+                    <button type="submit" className="bg-blue-500 text-white p-2 px-4 rounded-md cursor-pointer">Register</button>
                 </div>
             </form>
+
             <Toaster
                 position="top-right"
                 reverseOrder

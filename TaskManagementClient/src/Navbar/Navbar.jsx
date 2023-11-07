@@ -40,7 +40,7 @@ const Navbar = () => {
     }
     return (
         <div className=' bg-zinc-100  fixed w-full'>
-            <div className="navbar  w-[90%] mx-auto">
+            <div className="navbar  w-[80%] mx-auto">
                 <div className="navbar-start">
                     <div className="dropdown">
                         <label tabIndex={0} className="btn btn-ghost lg:hidden">
@@ -61,9 +61,10 @@ const Navbar = () => {
                             }
                         </ul>
                     </div>
-                    <p className="btn btn-ghost font-bold text-xl uppercase">Task Management</p>
+                    {/* <p className="btn btn-ghost font-bold text-xl uppercase font-serif">Task Management</p> */}
+                    <img className='h-20 w-64' src="/taskM.png" alt="" />
                 </div>
-                <div className="navbar-center hidden lg:flex">
+                 <div className="navbar-center hidden lg:flex">
                     <ul className="menu menu-horizontal px-1 text-xl font-black ">
                         <li><Link to='/'>Home</Link></li>
 

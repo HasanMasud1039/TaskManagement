@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Controller, useForm, } from 'react-hook-form';
-import './style.css'
+// import './style.css'
 import toast, { Toaster } from 'react-hot-toast';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import useAuth from '../Hooks/useAuth';
+
 
 
 const Login = () => {
@@ -44,7 +44,7 @@ const Login = () => {
     return (
         <div className='h-screen'>
             <h1 className='text-3xl font-bold text-center py-8 uppercase'>login Now</h1>
-            <form onSubmit={handleSubmit(onSubmit)}>
+            {/* <form onSubmit={handleSubmit(onSubmit)}>
 
                 <div>
                     <label htmlFor="email">Email</label>
@@ -82,7 +82,50 @@ const Login = () => {
                 <div className='text-center mt-4 flex justify-center'>
                     <button type="submit">Login</button>
                 </div>
-            </form>
+            </form> */}
+            <form onSubmit={handleSubmit(onSubmit)} className="max-w-[600px] mx-auto p-20 border border-gray-300 rounded-lg shadow-md bg-gray-200">
+  <div>
+    <label htmlFor="email" className="block font-bold mb-2">Email</label>
+    <Controller
+      name="email"
+      control={control}
+      rules={{
+        required: 'Email is required',
+        pattern: {
+          value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
+          message: 'Invalid email address',
+        },
+      }}
+      render={({ field }) => (
+        <input {...field} type="email" id="email" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />
+      )}
+    />
+    {errors.email && <p className="text-red-500 mt-[-10px] mb-2">{errors.email.message}</p>}
+  </div>
+
+  <div>
+    <label htmlFor="password" className="block font-bold mb-2">Password</label>
+    <Controller
+      name="password"
+      control={control}
+      rules={{
+        required: 'Password is required',
+        minLength: { value: 6, message: 'Password must be at least 6 characters long' },
+      }}
+      render={({ field }) => (
+        <input {...field} type="password" id="password" className="w-full p-2 mb-2 border border-gray-300 rounded-md" />
+      )}
+    />
+    {errors.password && <p className="text-red-500 mt-[-10px] mb-2">{errors.password.message}</p>}
+  </div>
+
+  <h3 className="text-lg">New Here? <span className="text-primary font-semibold"><Link to="/register">Register</Link></span></h3>
+
+  <div className="text-center mt-4 flex justify-center">
+    <button type="submit" className="bg-blue-500 text-white p-2 px-4 rounded-md cursor-pointer">Login</button>
+  </div>
+</form>
+
             <Toaster
                 position="top-right"
                 reverseOrder

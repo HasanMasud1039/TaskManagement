@@ -182,9 +182,9 @@ async function run() {
             const query = { _id: new ObjectId(id) };
             const update = {
                 $set: {
-                    task: updatedTask?.task,
-                    date: updatedTask?.date,
-                    time: updatedTask?.time,
+                    task: updatedTask.task,
+                    date: updatedTask.date,
+                    time: updatedTask.time,
                     description: updatedTask?.description,
                 }
             };
